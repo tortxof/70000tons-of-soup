@@ -2,6 +2,7 @@
 
 import json
 import base64
+import os
 
 import requests
 from bs4 import BeautifulSoup
@@ -14,8 +15,15 @@ class Band:
 
 bands = []
 
-with open('templates/band.html') as f:
-    html_band = f.read()
+def load_templates(template_dir):
+    templates = [template.split('.html')[0] for template in os.listdir(path=template_dir)]
+    html = dict()
+    for template in templates:
+        with open(template_dir + '/' + template + '.html') as f:
+            html[template] = f.read()
+    return html
+
+html = load_templates('templates')
 
 with open('auth.json') as f:
     auth = json.load(f)
@@ -47,5 +55,8 @@ for i in soup:
         artist_id = None
     bands.append(Band(name, url, artist_id))
 
+out = ''
 for band in bands:
-    print(html_band.format(name=band.name, url=band.url, artist_id=band.artist_id))
+    out += html['band'].format(name=band.name, url=band.url, artist_id=band.artist_id)
+
+print(html['base'].format(content=out))
