@@ -59,4 +59,14 @@ out = ''
 for band in bands:
     out += html['band'].format(name=band.name, url=band.url, artist_id=band.artist_id)
 
-print(html['base'].format(content=out))
+out = html['base'].format(content=out)
+
+with open('70000tons.html', 'w') as f:
+    f.write(out)
+
+out = ''
+for band in bands:
+    out += band.name + '\n'
+
+with open('70000tons.txt', 'w') as f:
+    f.write(out)
