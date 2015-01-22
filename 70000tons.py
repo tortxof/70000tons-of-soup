@@ -3,6 +3,7 @@
 import json
 import base64
 import os
+import sqlite3
 
 import requests
 from bs4 import BeautifulSoup
@@ -70,3 +71,11 @@ for band in bands:
 
 with open('70000tons.txt', 'w') as f:
     f.write(out)
+
+conn = sqlite3.connect('70000tons.db')
+conn.execute('create table bands (name, url, artist_id)')
+conn.commit()
+for band in bands:
+    conn.execute('insert into bands values (?, ?, ?)', (band.name, band.url, band.artist_id))
+conn.commit()
+conn.close()
